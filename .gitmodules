@@ -1,0 +1,3 @@
+[submodule "nodejs-hw-01-template"]
+	path = nodejs-hw-01-template
+	url = git@github.com:goitacademy/nodejs-hw-01-template.git
