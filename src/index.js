@@ -1,5 +1,7 @@
-import express from "express";
+import {startServer} from "./server.js";
 
-const app = express()
+const boostrap =()=>{
+	startServer()
+}
 
-app.listen(3002, ()=> console.log("Server running on the port 3002"))
+boostrap()
