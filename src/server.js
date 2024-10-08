@@ -10,7 +10,7 @@ const logger = pino({
 	}
 });
 
-export const startServer = ()=> {
+export const setupServer = ()=> {
 	const app = express()
 	app.use(cors());
 	app.use(logger)
@@ -23,7 +23,7 @@ export const startServer = ()=> {
 
 	app.use((req, res)=>{
 		res.status(404).json({
-			message: `${req.url} ot found`
+			message: `${req.url} not found`
 		})
 	})
 
