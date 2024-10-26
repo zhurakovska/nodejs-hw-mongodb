@@ -1,13 +1,17 @@
 import {Schema, model} from "mongoose";
 
+import {contactType, phoneNumberRegex} from "../../constants/contacts.js";
+import {handleSaveError, setUpdateSettings} from "./hooks.js";
+
 const contactSchema = new Schema({
 	name: {
 		type: String,
-		required: true
+		required: [true, 'Contact name is required'],
 	},
 	phoneNumber: {
 		type: String,
-		required: true
+		required: [true, 'Phone number is required'],
+		match: [phoneNumberRegex, 'Phone number must start with +380 and contain 9 digits after the code'],
 	},
 	email:{
 		type: String,
@@ -20,10 +24,17 @@ const contactSchema = new Schema({
 		type: String,
 		required: true,
 		default: "personal",
-		enum: ['work', 'home', 'personal']
+		enum: {
+			values: contactType,
+			message: `Contact type must be one of the following: ${contactType.join(', ')}`,
+		},
 	}
-}, { versionKey: false, timestamps: true})
+}, { versionKey: false, timestamps: true});
 
-const ContactCollection = model("contact", contactSchema);;
+contactSchema.post("save", handleSaveError );
+contactSchema.pre("findOneAndUpdate", setUpdateSettings);
+contactSchema.post("findOneAndUpdate" , handleSaveError );
+
+const ContactCollection = model("contact", contactSchema);
 
 export default ContactCollection;
