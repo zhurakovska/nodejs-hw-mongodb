@@ -1,7 +1,22 @@
 import ContactCollection from "../db/models/Contact.js";
+import {calcPaginationData} from "../utils/calcPaginationData.js";
 
 
-export const getContacts = () => ContactCollection.find();
+export const getContacts = async ({page, perPage: limit, sortBy = "_id", sortOrder = "asc"}) => {
+	const skip = (page -1)*limit
+	const data = await  ContactCollection.find().skip(skip).limit(limit).sort({[sortBy]:sortOrder})
+	const count = await ContactCollection.find().countDocuments()
+
+	const paginationData = calcPaginationData({count,page, perPage: limit })
+
+	return {
+		page,
+		perPage: limit,
+		...paginationData,
+		data,
+		count, //скільки всього об'єктів які відповідають вимогам
+	}
+};
 
 export const getContactById = id => ContactCollection.findById(id);
 

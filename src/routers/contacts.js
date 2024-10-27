@@ -4,11 +4,14 @@ import {ctrlWrapper} from "../utils/ctrlWrapper.js";
 import {isValidId} from "../middlewares/isValidId.js";
 import {validateBody} from "../utils/validateBody.js";
 import {contactAddSchema, contactUpdateSchema} from "../validations/contacts.js";
+import {parsePaginationParams} from "../middlewares/parsePaginationParams.js";
+import {parseSortParamsDecorator} from "../middlewares/parseSortParamsDecorator.js";
+import {contactsSortList} from "../db/models/Contact.js";
 
 const contactsRouter = Router()
 
 
-contactsRouter.get("/",ctrlWrapper(getContactsController));
+contactsRouter.get("/", parsePaginationParams,parseSortParamsDecorator(contactsSortList), ctrlWrapper(getContactsController));
 
 contactsRouter.get("/:contactId", isValidId, ctrlWrapper(getContactByIdController));
 
@@ -16,7 +19,7 @@ contactsRouter.post("/",validateBody(contactAddSchema), ctrlWrapper(addContactCo
 
 contactsRouter.put("/:contactId",isValidId, validateBody(contactAddSchema), ctrlWrapper(upsertContactController))
 
-contactsRouter.patch("/:contactId",isValidId, ctrlWrapper(patchContactController))
+contactsRouter.patch("/:contactId",isValidId,validateBody(contactUpdateSchema), ctrlWrapper(patchContactController))
 
 contactsRouter.delete("/:contactId",isValidId, ctrlWrapper(deleteContactController))
 

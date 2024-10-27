@@ -31,6 +31,14 @@ const contactSchema = new Schema({
 	}
 }, { versionKey: false, timestamps: true});
 
+export const contactsSortList = [
+	'name',
+	'phoneNumber',
+	'email',
+	'isFavorite',
+	'contactType',
+];
+
 contactSchema.post("save", handleSaveError );
 contactSchema.pre("findOneAndUpdate", setUpdateSettings);
 contactSchema.post("findOneAndUpdate" , handleSaveError );
