@@ -28,6 +28,11 @@ const contactSchema = new Schema({
 			values: contactType,
 			message: `Contact type must be one of the following: ${contactType.join(', ')}`,
 		},
+	},
+	userId: {
+		type: Schema.Types.ObjectId,
+		ref: "user",
+		required:true
 	}
 }, { versionKey: false, timestamps: true});
 

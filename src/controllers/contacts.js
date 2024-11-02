@@ -20,8 +20,9 @@ export const getContactsController = async (req, res) => {
 }
 
 export const getContactByIdController = async (req, res) => {
-	const {contactId} = req.params
-	const data = await contactsServices.getContactById(contactId);
+	const {contactId} = req.params;
+	const {_id: userId} = req.user;
+	const data = await contactsServices.getContact({_id:contactId, userId});
 
 	if(!data) {
 		throw createHttpError(404, "Contact not found")
@@ -35,7 +36,8 @@ export const getContactByIdController = async (req, res) => {
 }
 
 export const addContactController = async (req, res )=> {
-	const data = await contactsServices.addContact(req.body);
+	const {_id: userId} = req.user
+	const data = await contactsServices.addContact({...req.body,userId });
 
 	res.status(201).json({
 	   status:201,
@@ -46,7 +48,8 @@ export const addContactController = async (req, res )=> {
 
 export const upsertContactController = async (req, res) =>{
 	const {contactId} = req.params;
-	const {data, isNew} = await contactsServices.updateContactById(contactId, req.body, {upsert: true});
+	const {_id: userId} = req.user;
+	const {data, isNew} = await contactsServices.updateContact({_id:contactId, userId}, {...req.body, userId}, {upsert: true});
 
 	const status = isNew ? 201 : 200;
 	res.status(status).json({
@@ -58,7 +61,8 @@ export const upsertContactController = async (req, res) =>{
 
 export const patchContactController = async (req, res) => {
 	const {contactId} = req.params;
-	const {data} = await contactsServices.updateContactById(contactId, req.body, {upsert: true});
+	const {_id: userId} = req.user;
+	const {data} = await contactsServices.updateContact({_id:contactId, userId}, req.body, {upsert: true});
 
 	res.json({
 		status: 200,
@@ -69,8 +73,8 @@ export const patchContactController = async (req, res) => {
 
 export const deleteContactController = async (req, res) => {
 	const {contactId} = req.params;
-
-	const data = await contactsServices.deleteContactById(contactId);
+	const {_id: userId} = req.user;
+	const data = await contactsServices.deleteContact({_id:contactId, userId});
 
 	if(!data) {
 		throw createHttpError(404, "Contact not found")

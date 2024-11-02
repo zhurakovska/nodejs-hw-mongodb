@@ -7,6 +7,7 @@ import {notFoundHandler} from "./middlewares/notFoundHandler.js";
 import {errorHandler} from "./middlewares/errorHandler.js";
 import {logger} from "./middlewares/logger.js"
 import authRouter from "./routers/auth.js";
+import cookieParser from "cookie-parser";
 
 
 export const setupServer = ()=> {
@@ -15,6 +16,7 @@ export const setupServer = ()=> {
 	app.use(logger)
 
 	app.use(express.json())
+	app.use(cookieParser())
 	app.use('/auth', authRouter);
 	app.use("/contacts",contactsRouter )
 	app.use(notFoundHandler)
